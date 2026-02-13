@@ -29,12 +29,15 @@
 #' objects obtained after login. If the \code{datasources} argument is not specified
 #' the default set of connections will be used: see \code{\link{datashield.connections_default}}.
 #' @return a summary table of the object of class 'mediate'.
-#' @author Demetris Avraam, for DataSHIELD Development Team
+#' @author Demetris Avraam
 #' @export
-#' @import DSI
+#' @import DSI, dsBaseClient
 #'
-ds.mediate <- function(model.m=NULL, model.y=NULL, treat = NULL, mediator = NULL, boot=FALSE,
-                       conf.level=0.95, robustSE=FALSE, sims=1000, seed=NULL, newobj=NULL, datasources=NULL){
+ds.mediate <- function(model.m = NULL, model.y = NULL, sims = 1000, boot = FALSE, 
+                        boot.ci.type = "perc", treat = NULL, mediator = NULL, 
+                        covariates = NULL, outcome = NULL, control = NULL,
+                        conf.level = 0.95, control.value = 0, treat.value = 1, 
+                        robustSE =FALSE, seed = NULL, newobj = NULL, datasources = NULL){
   
   # look for DS connections
   if(is.null(datasources)){
@@ -57,16 +60,14 @@ ds.mediate <- function(model.m=NULL, model.y=NULL, treat = NULL, mediator = NULL
   # check if the model outcomes are defined in all studies
   defined.m <- dsBaseClient:::isDefined(datasources, model.m)
   defined.y <- dsBaseClient:::isDefined(datasources, model.y)
-
-  treat.name <- treat
-  med.name <- mediator
   
   if(is.null(newobj)){
     newobj <- 'med.out'
   }
 
-  calltext <- call('mediateDS', model.m, model.y, treat.name, med.name, boot, 
-                   conf.level, robustSE, sims, seed, newobj)
+  calltext <- call('mediateDS', model.m=model.m, model.y=model.y, sims=sims, boot=boot, 
+                   treat=treat, mediator=mediator, conf.level=conf.level, robustSE=robustSE,
+                   seed=seed, newobj=newobj)
   study.summary <- DSI::datashield.aggregate(datasources, calltext)
   
   return(study.summary)

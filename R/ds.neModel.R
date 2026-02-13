@@ -22,8 +22,9 @@
 #' objects obtained after login. If the \code{datasources} argument is not specified
 #' the default set of connections will be used: see \code{\link{datashield.connections_default}}.
 #' @return a summary table of the object of class 'neModel'.
-#' @author Demetris Avraam, for DataSHIELD Development Team
+#' @author Demetris Avraam
 #' @export
+#' @import DSI, dsBaseClient
 #'
 ds.neModel <- function(formula = NULL, family = NULL, expData = NULL, se = "robust", 
                        nBoot = 1000, newobj = NULL, datasources = NULL){
@@ -73,5 +74,3 @@ ds.neModel <- function(formula = NULL, family = NULL, expData = NULL, se = "robu
   return(out)
   
 }   
-  
-  
